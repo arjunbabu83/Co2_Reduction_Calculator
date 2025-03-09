@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CO2 Reduction Calculator</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 20px;
+        }
+        .container {
+            max-width: 500px;
+            margin: auto;
+            background: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            text-align: center;
+        }
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>CO2 Reduction Calculator with Electric Vehicles</h1>
+        <label for="milesDriven">Miles Driven per Week:</label>
+        <input type="number" id="milesDriven" placeholder="Enter miles">
+        <label for="gasMileage">Gas Vehicle MPG:</label>
+        <input type="number" id="gasMileage" placeholder="Enter MPG">
+        <button id="calculate">Calculate CO2 Reduction</button>
+        <h2 id="result"></h2>
+    </div>
+    <script>
+        document.getElementById('calculate').addEventListener('click', function() {
+            const milesDriven = parseFloat(document.getElementById('milesDriven').value);
+            const gasMileage = parseFloat(document.getElementById('gasMileage').value);
+            if (!isNaN(milesDriven) && !isNaN(gasMileage) && gasMileage > 0) {
+                const CO2_PER_GALLON = 19.6; // pounds
+                const gallonsUsed = milesDriven / gasMileage;
+                const CO2Emissions = gallonsUsed * CO2_PER_GALLON;
+                const CO2Reduction = CO2Emissions;
+                document.getElementById('result').innerText = `Estimated CO2 Reduction: ${CO2Reduction.toFixed(2)} pounds per week.`;
+            } else {
+                document.getElementById('result').innerText = 'Please enter valid numbers.';
+            }
+        });
+    </script>
+</body>
+</html>
