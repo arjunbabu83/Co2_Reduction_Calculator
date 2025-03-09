@@ -3,60 +3,186 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>CO2 Reduction Calculator</title>
+    <title>CO2 Emissions: Conventional vs Electric Vehicles</title>
     <style>
         body {
             font-family: Arial, sans-serif;
-            background-color: #f4f4f4;
             margin: 0;
-            padding: 20px;
+            padding: 0;
+            background: linear-gradient(135deg, #1a1a2e, #16213e);
+            color: #ffffff;
+            min-height: 100vh;
         }
         .container {
-            max-width: 500px;
-            margin: auto;
-            background: white;
+            max-width: 1200px;
+            margin: 0 auto;
             padding: 20px;
-            border-radius: 5px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        header {
+            text-align: center;
+            padding: 40px 0;
+            background: rgba(0, 153, 255, 0.1);
+            border-radius: 10px;
+            margin-bottom: 30px;
         }
         h1 {
-            text-align: center;
+            color: #00ccff;
+            text-shadow: 2px 2px 4px rgba(0, 204, 255, 0.3);
+            margin: 0;
+        }
+        .input-section {
+            background: rgba(255, 255, 255, 0.1);
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            box-shadow: 0 0 20px rgba(0, 204, 255, 0.2);
+        }
+        .input-group {
+            margin: 15px 0;
         }
         label {
+            color: #ffcc00;
+            font-weight: bold;
             display: block;
-            margin-top: 10px;
+            margin-bottom: 5px;
         }
         input {
             width: 100%;
-            padding: 8px;
-            margin-top: 5px;
+            padding: 10px;
+            border: none;
+            border-radius: 5px;
+            background: rgba(255, 255, 255, 0.9);
+            color: #1a1a2e;
+            font-size: 16px;
+        }
+        button {
+            background: #ff3366;
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 18px;
+            transition: transform 0.2s;
+        }
+        button:hover {
+            transform: scale(1.05);
+            background: #ff6699;
+        }
+        .results {
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+        }
+        .result-card {
+            flex: 1;
+            background: rgba(255, 255, 255, 0.15);
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            transition: transform 0.3s;
+        }
+        .result-card:hover {
+            transform: translateY(-10px);
+        }
+        .conventional {
+            border: 2px solid #ff3366;
+        }
+        .electric {
+            border: 2px solid #00cc66;
+        }
+        .savings {
+            border: 2px solid #ffcc00;
+        }
+        h2 {
+            margin: 0 0 15px 0;
+            font-size: 24px;
+        }
+        .value {
+            font-size: 36px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        footer {
+            text-align: center;
+            padding: 20px;
+            color: #99ccff;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>CO2 Reduction Calculator with Electric Vehicles</h1>
-        <label for="milesDriven">Miles Driven per Week:</label>
-        <input type="number" id="milesDriven" placeholder="Enter miles">
-        <label for="gasMileage">Gas Vehicle MPG:</label>
-        <input type="number" id="gasMileage" placeholder="Enter MPG">
-        <button id="calculate">Calculate CO2 Reduction</button>
-        <h2 id="result"></h2>
+        <header>
+            <h1>CO2 Emissions Calculator: Conventional vs Electric Vehicles</h1>
+        </header>
+
+        <div class="input-section">
+            <div class="input-group">
+                <label>Annual Distance (km):</label>
+                <input type="number" id="distance" value="15000" min="0">
+            </div>
+            <div class="input-group">
+                <label>Fuel Efficiency (L/100km):</label>
+                <input type="number" id="fuelEfficiency" value="8" min="1" step="0.1">
+            </div>
+            <div class="input-group">
+                <label>Electricity Consumption (kWh/100km):</label>
+                <input type="number" id="electricity" value="18" min="1" step="0.1">
+            </div>
+            <button onclick="calculateEmissions()">Calculate CO2 Emissions</button>
+        </div>
+
+        <div class="results">
+            <div class="result-card conventional">
+                <h2 style="color: #ff3366">Conventional Car</h2>
+                <div class="value" id="conventionalResult">0 kg</div>
+                <p>CO2 emissions per year</p>
+            </div>
+            <div class="result-card electric">
+                <h2 style="color: #00cc66">Electric Vehicle</h2>
+                <div class="value" id="electricResult">0 kg</div>
+                <p>CO2 emissions per year</p>
+            </div>
+            <div class="result-card savings">
+                <h2 style="color: #ffcc00">CO2 Savings</h2>
+                <div class="value" id="savingsResult">0 kg</div>
+                <p>Annual reduction</p>
+            </div>
+        </div>
     </div>
+
+    <footer>
+        Created with ❤️ by xAI | Data based on average emissions as of March 2025
+    </footer>
+
     <script>
-        document.getElementById('calculate').addEventListener('click', function() {
-            const milesDriven = parseFloat(document.getElementById('milesDriven').value);
-            const gasMileage = parseFloat(document.getElementById('gasMileage').value);
-            if (!isNaN(milesDriven) && !isNaN(gasMileage) && gasMileage > 0) {
-                const CO2_PER_GALLON = 19.6; // pounds
-                const gallonsUsed = milesDriven / gasMileage;
-                const CO2Emissions = gallonsUsed * CO2_PER_GALLON;
-                const CO2Reduction = CO2Emissions;
-                document.getElementById('result').innerText = `Estimated CO2 Reduction: ${CO2Reduction.toFixed(2)} pounds per week.`;
-            } else {
-                document.getElementById('result').innerText = 'Please enter valid numbers.';
-            }
-        });
+        function calculateEmissions() {
+            // Get input values
+            const distance = parseFloat(document.getElementById('distance').value) || 0;
+            const fuelEfficiency = parseFloat(document.getElementById('fuelEfficiency').value) || 0;
+            const electricity = parseFloat(document.getElementById('electricity').value) || 0;
+
+            // Constants (as of 2025 estimates)
+            const co2PerLiterGasoline = 2.31; // kg CO2 per liter of gasoline
+            const co2PerKwh = 0.4; // kg CO2 per kWh (grid average)
+
+            // Calculations
+            const conventionalCO2 = (distance / 100) * fuelEfficiency * co2PerLiterGasoline;
+            const electricCO2 = (distance / 100) * electricity * co2PerKwh;
+            const savings = conventionalCO2 - electricCO2;
+
+            // Update results
+            document.getElementById('conventionalResult').textContent = 
+                conventionalCO2.toFixed(0) + ' kg';
+            document.getElementById('electricResult').textContent = 
+                electricCO2.toFixed(0) + ' kg';
+            document.getElementById('savingsResult').textContent = 
+                savings.toFixed(0) + ' kg';
+        }
+
+        // Initial calculation
+        calculateEmissions();
     </script>
 </body>
 </html>
